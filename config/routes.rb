@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   namespace :api do
-    resources :posts, only: [:index, :show, :create, :update, :destroy]
+    resources :posts, only: [ :index, :show, :create, :update, :destroy ]
   end
 
   # Health check endpoint for uptime monitoring

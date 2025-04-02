@@ -45,7 +45,7 @@ class Api::PostsController < ApplicationController
       @post = Post.find_by(slug: params[:slug]) || Post.find_by(id: params[:id])
 
       # If no post is found, return a 404 response
-      render json: { error: 'Post not found' }, status: :not_found if @post.nil?
+      render json: { error: "Post not found" }, status: :not_found if @post.nil?
     end
 
     # Only allow a list of trusted parameters through.
