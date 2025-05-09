@@ -1,19 +1,27 @@
 class Api::PostsController < ApplicationController
-  before_action :set_post, only: %i[ show update destroy ]
+  before_action :set_post, only: %i[show update destroy]
 
-  # GET /posts
+  # GET /api/posts
   def index
-    @posts = Post.all
+    limit = params[:limit].present? ? params[:limit].to_i : 10
+
+    @posts = if params[:tag]
+               Post.where("? = ANY (tags)", params[:tag])
+             else
+               Post.all
+             end
+
+    @posts = @posts.order(created_at: :desc).limit(limit)
 
     render json: @posts
   end
 
-  # GET /posts/1
+  # GET /api/posts/:slug
   def show
     render json: @post
   end
 
-  # POST /posts
+  # POST /api/posts
   def create
     @post = Post.new(post_params)
 
@@ -24,7 +32,7 @@ class Api::PostsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /posts/1
+  # PATCH/PUT /api/posts/:slug
   def update
     if @post.update(post_params)
       render json: @post
@@ -33,23 +41,24 @@ class Api::PostsController < ApplicationController
     end
   end
 
-  # DELETE /posts/1
+  # DELETE /api/posts/:slug
   def destroy
     @post.destroy!
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_post
-      # Check for a 'slug' param, fallback to 'id' if missing
-      @post = Post.find_by(slug: params[:slug]) || Post.find_by(id: params[:id])
 
-      # If no post is found, return a 404 response
-      render json: { error: "Post not found" }, status: :not_found if @post.nil?
-    end
+  def set_post
+    Rails.logger.info "PARAMS: #{params.inspect}"
+    @post = Post.find_by(slug: params[:slug])
 
-    # Only allow a list of trusted parameters through.
-    def post_params
-      params.expect(post: [ :title, :content ])
+    unless @post
+      Rails.logger.info "Post not found with slug: #{params[:slug]}"
+      render json: { error: "Post not found" }, status: :not_found
     end
+  end
+
+  def post_params
+    params.require(:post).permit(:title, :content, tags: [])
+  end
 end
