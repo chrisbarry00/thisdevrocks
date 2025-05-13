@@ -1,19 +1,15 @@
+# config/initializers/cors.rb
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
-    origins 'http://localhost:3001'
-    resource '*',
-      headers: :any,
-      methods: [:get, :post, :put, :patch, :delete, :options, :head],
-      expose: ['Authorization'],
-      credentials: false
-  end
+    # Local development origin
+    origins "http://localhost:3001"
 
-  allow do
-    origins 'https://thisdev.rocks'
-    resource '*',
+    # Production origins
+    origins "https://thisdev.rocks", "https://www.thisdev.rocks"
+
+    resource "*",
       headers: :any,
-      methods: [:get, :post, :put, :patch, :delete, :options, :head],
-      expose: ['Authorization'],
-      credentials: false
+      methods: %i[get post put patch delete options head],
+      expose: [ "Authorization" ]
   end
 end

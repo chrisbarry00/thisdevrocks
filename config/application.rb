@@ -38,17 +38,5 @@ module ThisdevrocksApi
 
     # Only loads a smaller set of middleware suitable for API only apps.
     config.api_only = true
-
-    config.middleware.insert_before ActionDispatch::Static, Rack::Cors do
-      allow do
-        origins 'https://thisdev.rocks', 'https://api.thisdev.rocks'
-        resource '*',
-                 headers: :any,
-                 methods: %i[get post put patch delete options head],
-                 expose: %w[Authorization Access-Control-Allow-Origin],
-                 max_age: 600,
-                 credentials: false
-      end
-    end
   end
 end

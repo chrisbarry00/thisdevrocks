@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get "/ping", to: proc { [ 200, {}, [ "Pong" ] ] }
+
   namespace :api do
     resources :posts, param: :slug, only: [ :index, :show, :create, :update, :destroy ]
   end
