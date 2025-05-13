@@ -7,9 +7,9 @@ class Api::PostsController < ApplicationController
 
     @posts = if params[:tag]
                Post.where("? = ANY (tags)", params[:tag])
-             else
+    else
                Post.all
-             end
+    end
 
     @posts = @posts.order(created_at: :desc).limit(limit)
 

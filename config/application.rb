@@ -37,8 +37,18 @@ module ThisdevrocksApi
     # config.eager_load_paths << Rails.root.join("extras")
 
     # Only loads a smaller set of middleware suitable for API only apps.
-    # Middleware like session, flash, cookies can be added back manually.
-    # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
+
+    config.middleware.insert_before ActionDispatch::Static, Rack::Cors do
+      allow do
+        origins 'https://thisdev.rocks', 'https://api.thisdev.rocks'
+        resource '*',
+                 headers: :any,
+                 methods: %i[get post put patch delete options head],
+                 expose: %w[Authorization Access-Control-Allow-Origin],
+                 max_age: 600,
+                 credentials: false
+      end
+    end
   end
 end
