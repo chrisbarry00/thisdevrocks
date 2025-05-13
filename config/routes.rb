@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   namespace :api do
-    resources :posts, param: :slug, only: [:index, :show, :create, :update, :destroy]
-  end  
+    resources :posts, param: :slug, only: [ :index, :show, :create, :update, :destroy ]
+  end
 
   # Health check endpoint for uptime monitoring
   get "up" => "rails/health#show", as: :rails_health_check
